@@ -11,6 +11,7 @@ const port = process.env.PORT || 3000;
 var app = express();
 app.use(bodyParser.json());
 
+//Handle for inserting documents in database
 app.post('/todo', (req, res) => {
   var newTodo = new Todo({
     text: req.body.text
@@ -23,6 +24,8 @@ app.post('/todo', (req, res) => {
   });
 });
 
+
+//Handle for listing all documents from database
 app.get('/todo', (req, res) => {
   Todo.find().then((todos) => {
     res.send({todos});
@@ -31,6 +34,8 @@ app.get('/todo', (req, res) => {
   });
 });
 
+
+//Handle to list a document by id
 app.get('/todo/:id', (req, res) => {
   var id = req.params.id;
   if(!ObjectID.isValid(id)) {
@@ -44,6 +49,25 @@ app.get('/todo/:id', (req, res) => {
     res.send({todo});
   }, (err) => {
     res.status(400).send(err);
+  });
+});
+
+
+//Handle to remove a document by id
+app.delete('/todo/:id', (req, res) => {
+  var id = req.params.id;
+
+  if(!ObjectID.isValid(id)) {
+    return res.status(404).send('ID not valid');
+  }
+
+  Todo.findByIdAndRemove(id).then((todo) => {
+    if(!todo) {
+      return res.status(404).send('Todo not found');
+    }
+    res.send({todo});
+  }).catch((e) => {
+    res.status(400).send();
   });
 });
 
