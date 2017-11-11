@@ -25,7 +25,6 @@ app.post('/todo', (req, res) => {
   });
 });
 
-
 //Handle for listing all documents from database
 app.get('/todo', (req, res) => {
   Todo.find().then((todos) => {
@@ -34,7 +33,6 @@ app.get('/todo', (req, res) => {
     res.status(400).send(err);
   });
 });
-
 
 //Handle to list a document by id
 app.get('/todo/:id', (req, res) => {
@@ -53,7 +51,6 @@ app.get('/todo/:id', (req, res) => {
   });
 });
 
-
 //Handle to remove a document by id
 app.delete('/todo/:id', (req, res) => {
   var id = req.params.id;
@@ -71,7 +68,6 @@ app.delete('/todo/:id', (req, res) => {
     res.status(400).send();
   });
 });
-
 
 //Handle to update a document
 app.patch('/todo/:id', (req, res) => {
@@ -100,6 +96,20 @@ app.patch('/todo/:id', (req, res) => {
   });
 });
 
+
+//Handle to create a User
+app.post('/user', (req, res) => {
+  var body = _.pick(req.body, ['email', 'password']);
+  var user = new User(body);
+
+  user.save().then(() => {
+    return user.generateAuthToken();
+  }).then((token) => {
+    res.header('x-auth', token).send(user);
+  }).catch((e) => {
+    res.status(400).send(e);
+  });
+});
 
 app.listen(port, () => {
   console.log(`Server listening on port ${port}`);
