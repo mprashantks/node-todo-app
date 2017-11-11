@@ -6,6 +6,7 @@ const _ = require('lodash');
 const {mongoose} = require('./db/mongoose');
 const {Todo} = require('./models/Todo');
 const {User} = require('./models/User');
+const {authenticate} = require('./middleware/authenticate');
 
 const port = process.env.PORT || 3000;
 
@@ -97,8 +98,14 @@ app.patch('/todo/:id', (req, res) => {
 });
 
 
+
+app.get('/users/me', authenticate, (req, res) => {
+  res.send(req.user);
+});
+
+
 //Handle to create a User
-app.post('/user', (req, res) => {
+app.post('/users', (req, res) => {
   var body = _.pick(req.body, ['email', 'password']);
   var user = new User(body);
 
