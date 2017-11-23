@@ -8,6 +8,7 @@ const {Todo} = require('./models/Todo');
 const {User} = require('./models/User');
 const {authenticate} = require('./middleware/authenticate');
 
+const publicPath = path.join(__dirname, '/../public');
 const port = process.env.PORT || 3000;
 
 var app = express();
