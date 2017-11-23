@@ -3,28 +3,45 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
-    <title>Chat | Join</title>
+    <title>Todo API | Help</title>
     <link rel="stylesheet" href="/css/styles.css" />
   </head>
 
   <body class="centered-form">
     <div class="centered-form__form">
-      <form action="/chat.html">
+
       <div class="form-field">
-        <h3>Join a Chat</h3>
+        <h3>API Help</h3>
       </div>
       <div class="form-field">
-        <label>Display name</label>
-        <input type="text" name="name" autofocus />
+        <p>Before using this API you need to register as an user.</p>
+        <p>Use the below given url to register.</p>
+        <p>POST - https://enigmatic-coast-59622.herokuapp.com/users</p>
+        <p>You need to pass a JSON object as request consisting of your email and password. For example -</p>
+        <p>{ "email": "your_email", "password": "your_password" }</p>
       </div>
       <div class="form-field">
-        <label>Room name</label>
-        <input type="text" name="room" />
+        <h4>API Routes</h4>
+        <h5>1. Login as user</h5>
+        <p>POST - https://enigmatic-coast-59622.herokuapp.com/users/login</p>
+        <p>Request body - JSON Object e.g., { "email": "your_email",	"password": "your_password" }</p>
+        <br>
+        <h5>2. Get all todos</h5>
+        <p>GET - https://enigmatic-coast-59622.herokuapp.com/todo</p>
+        <br>
+        <h5>3. Add a todo</h5>
+        <p>POST - https://enigmatic-coast-59622.herokuapp.com/todo</p>
+        <p>Request body - JSON Object e.g., {	"text": "your_todo_text" }</p>
+        <br>
+        <h5>4. Get a todo by id</h5>
+        <p>GET - https://enigmatic-coast-59622.herokuapp.com/todo/{id_of_todo}</p>
+        <br>
+        <h5>5. Update a todo by id</h5>
+        <p>PATCH - https://enigmatic-coast-59622.herokuapp.com/todo/{id_of_todo}</p>
+        <br>
+        <h5>6. DELETE a todo by id</h5>
+        <p>DELETE - https://enigmatic-coast-59622.herokuapp.com/todo/{id_of_todo}</p>        
       </div>
-      <div class="form-field">
-        <button>Join</button>
-      </div>
-      </form>
     </div>
   </body>
 </html>
