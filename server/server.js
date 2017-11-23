@@ -1,3 +1,4 @@
+const path = require('path');
 const express = require('express');
 const bodyParser = require('body-parser');
 const {ObjectID} = require('mongodb');
@@ -13,6 +14,7 @@ const port = process.env.PORT || 3000;
 
 var app = express();
 app.use(bodyParser.json());
+app.use(express.static(publicPath));
 
 //Handle for inserting documents in database
 app.post('/todo', (req, res) => {
