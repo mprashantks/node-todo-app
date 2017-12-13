@@ -1,3 +1,5 @@
+require('./config/config');
+
 const path = require('path');
 const express = require('express');
 const bodyParser = require('body-parser');
@@ -10,16 +12,18 @@ const {User} = require('./models/User');
 const {authenticate} = require('./middleware/authenticate');
 
 const publicPath = path.join(__dirname, '/../public');
-const port = process.env.PORT || 3000;
 
 var app = express();
+const port = process.env.PORT;
+
 app.use(bodyParser.json());
 app.use(express.static(publicPath));
 
-//Handle for inserting documents in database
-app.post('/todo', (req, res) => {
+//Handle for inserting todos in database
+app.post('/todo', authenticate, (req, res) => {
   var newTodo = new Todo({
-    text: req.body.text
+    text: req.body.text,
+    _creator: req.user._id
   });
 
   newTodo.save().then((doc) => {
@@ -29,23 +33,28 @@ app.post('/todo', (req, res) => {
   });
 });
 
-//Handle for listing all documents from database
-app.get('/todo', (req, res) => {
-  Todo.find().then((todos) => {
+//Handle for listing todos from database
+app.get('/todo', authenticate, (req, res) => {
+  Todo.find({
+    _creator: req.user._id
+  }).then((todos) => {
     res.send({todos});
   }, (err) => {
     res.status(400).send(err);
   });
 });
 
-//Handle to list a document by id
-app.get('/todo/:id', (req, res) => {
+//Handle to list a todo by id
+app.get('/todo/:id', authenticate, (req, res) => {
   var id = req.params.id;
   if(!ObjectID.isValid(id)) {
     return res.status(404).send('Not a valid ID');
   }
 
-  Todo.findById(id).then((todo) => {
+  Todo.findOne({
+    _id: id,
+    creator: req.user._id
+  }).then((todo) => {
     if(!todo) {
       return res.status(404).send('Todo not found');
     }
@@ -55,15 +64,18 @@ app.get('/todo/:id', (req, res) => {
   });
 });
 
-//Handle to remove a document by id
-app.delete('/todo/:id', (req, res) => {
+//Handle to remove a todo by id
+app.delete('/todo/:id', authenticate, (req, res) => {
   var id = req.params.id;
 
   if(!ObjectID.isValid(id)) {
     return res.status(404).send('ID not valid');
   }
 
-  Todo.findByIdAndRemove(id).then((todo) => {
+  Todo.findOneAndRemove({
+    _id: id,
+    creator: req.user._id
+  }).then((todo) => {
     if(!todo) {
       return res.status(404).send('Todo not found');
     }
@@ -73,8 +85,8 @@ app.delete('/todo/:id', (req, res) => {
   });
 });
 
-//Handle to update a document
-app.patch('/todo/:id', (req, res) => {
+//Handle to update a todo
+app.patch('/todo/:id', authenticate, (req, res) => {
   var id = req.params.id;
 
   if(!ObjectID.isValid(id)) {
@@ -90,7 +102,7 @@ app.patch('/todo/:id', (req, res) => {
     body.completed = false;
   }
 
-  Todo.findByIdAndUpdate(id, {$set: body}, {new: true}).then((todo) => {
+  Todo.findOneAndUpdate({_id: id, creator: req.user._id}, {$set: body}, {new: true}).then((todo) => {
     if(!todo) {
       return res.status(404).send('Todo not found');
     }
