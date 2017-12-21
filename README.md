@@ -1,3 +1,16 @@
-# node-todo-app
+# Todo API
 Restful API to serve todo requests to user.
-App uses mongodb database to store todos of user. User can register, login, add a todo note, modify it and view the note.
+<br>
+Todos are small notes just like sticky notes. API provides following functionalities :
+<br>
+  1. Register as user
+  2. Login as user
+  3. Add a Todo note
+  4. View all or a specific Todo note
+  5. Modify Todo note
+  6. Delete Todo note
+  7. Logout
+<br>
+monogoDB database is used to store todos.
+<br>
+API can be accessed using link provided in title of repository.
